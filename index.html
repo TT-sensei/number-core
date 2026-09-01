@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#171a2b">
+  <title>数覚バトル ナンバーコア!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">NUMBER CORE</div>
+        <h1>数覚バトル ナンバーコア!</h1>
+      </div>
+      <button id="restartBtn" class="ghost">最初から</button>
+    </header>
+
+    <section class="core-panel">
+      <div class="core-label">CORE NUMBER</div>
+      <div id="coreNumber" class="core-number">30</div>
+      <div id="rangeGuide" class="range-guide"></div>
+    </section>
+
+    <section class="battle">
+      <div class="fighter enemy">
+        <div class="fighter-name">CPU <span id="enemyEmoji">👾</span></div>
+        <div class="hp-wrap"><div id="enemyHpBar" class="hp-bar"></div></div>
+        <div id="enemyHpText" class="hp-text">HP 10 / 10</div>
+      </div>
+
+      <div class="versus">VS</div>
+
+      <div class="fighter player">
+        <div class="fighter-name"><span id="playerEmoji">🧙</span> YOU</div>
+        <div class="hp-wrap"><div id="playerHpBar" class="hp-bar"></div></div>
+        <div id="playerHpText" class="hp-text">HP 10 / 10</div>
+      </div>
+    </section>
+
+    <section id="status" class="status">数字を2枚以上選んで、数字を作ろう！</section>
+
+    <section class="command-area">
+      <div class="section-title">コマンド</div>
+      <div id="commandCards" class="command-cards"></div>
+    </section>
+
+    <section class="calculator">
+      <div class="expression" id="expression">数字を選択してください</div>
+      <div class="operators" id="operators">
+        <button data-op="+">＋</button>
+        <button data-op="-">−</button>
+        <button data-op="*">×</button>
+        <button data-op="/">÷</button>
+      </div>
+      <button id="executeBtn" class="execute" disabled>この数字でコマンド発動！</button>
+      <button id="changeBtn" class="change">🔄 チェンジ（1ターン1回）</button>
+    </section>
+
+    <section class="hand-area">
+      <div class="section-title">あなたの手札 <span id="handCount"></span></div>
+      <div id="hand" class="hand"></div>
+    </section>
+
+    <section class="battle-log">
+      <div class="section-title">バトルログ</div>
+      <div id="log" class="log"></div>
+    </section>
+
+    <div id="overlay" class="overlay hidden">
+      <div class="result-card">
+        <div id="resultEmoji" class="result-emoji">🎉</div>
+        <h2 id="resultTitle">勝利！</h2>
+        <p id="resultText"></p>
+        <button id="nextBtn" class="execute">次へ</button>
+      </div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
