@@ -12,6 +12,7 @@
     {name:'きのこっこ',core:30,personality:'回復型',abilityName:'きのこ胞子',ability:'heal',ops:['+','-','*'],image:ZAKO+'kinoko-apple-mushroom.webp'},
     {name:'はっぱリス',core:30,personality:'しんちょう',abilityName:'リーフシールド',ability:'guard',ops:['+','-'],image:ZAKO+'happa-squirrel-leafy.webp'},
     {name:'コグホイールビートル',core:30,personality:'計算型',abilityName:'ギアチェンジ',ability:'switch',ops:['+','-','*','/'],image:ZAKO+'cogwheel-beetle.webp'},
+    {name:'ホローハット',core:30,personality:'ゆっくり型',abilityName:'あやしい帽子',ability:'switch',ops:['+','-','*'],image:ZAKO+'hollow-hat-scarecrow.webp'},
     {name:'バブルフィン',core:50,personality:'ゆらゆら型',abilityName:'バブルミラー',ability:'mirror',ops:['+','-','*'],image:ZAKO+'bubblefin-frog.webp'},
     {name:'もふウルフ',core:50,personality:'攻撃型',abilityName:'フロストブレス',ability:'breath',ops:['+','-','*','/'],image:ZAKO+'mofu-wolf-frost-pup.webp'},
     {name:'フロストファング',core:50,personality:'時間型',abilityName:'こおりの圧力',ability:'frost',ops:['+','-','*','/'],image:ZAKO+'frostfang-weasel.webp'},
@@ -28,8 +29,7 @@
     {name:'ペーパークレイン',core:100,personality:'工夫型',abilityName:'おりがみ返し',ability:'mirror',ops:['+','-','*','/'],image:ZAKO+'paper-crane-spirit.webp'},
     {name:'クローバーマンドラゴラ',core:100,personality:'回復型',abilityName:'四つ葉の願い',ability:'heal',ops:['+','-','*'],image:ZAKO+'clover-mandragora.webp'},
     {name:'ダスクフェザーオウル',core:100,personality:'観察型',abilityName:'ナイトアイ',ability:'just',ops:['+','-','*','/'],image:ZAKO+'dusk-feather-owl.webp'},
-    {name:'エンバーランタン',core:100,personality:'時間型',abilityName:'ほのお時計',ability:'frost',ops:['+','-','*','/'],image:ZAKO+'ember-lantern-salamander.webp'},
-    {name:'ホローハット',core:30,personality:'ゆっくり型',abilityName:'あやしい帽子',ability:'switch',ops:['+','-','*'],image:ZAKO+'hollow-hat-scarecrow.webp'}
+    {name:'エンバーランタン',core:100,personality:'時間型',abilityName:'ほのお時計',ability:'frost',ops:['+','-','*','/'],image:ZAKO+'ember-lantern-salamander.webp'}
   ];
 
   const RARE_MONSTERS = [
@@ -59,5 +59,14 @@
     }
   };
 
+  // すでに元ゲームが登録したボタンも、拡張版resetへつなぎ直す。
+  const restart = document.getElementById('restartBtn');
+  const next = document.getElementById('nextBtn');
+  if (restart) restart.onclick = () => window.reset();
+  if (next) next.onclick = () => window.reset();
+
   window.NUMBER_CORE_MONSTERS = {all:[...EXPANDED_MONSTERS,...RARE_MONSTERS],expanded:EXPANDED_MONSTERS,rare:RARE_MONSTERS};
+
+  // 初回表示も旧4体のままにしない。
+  if (originalReset) window.reset();
 })();
