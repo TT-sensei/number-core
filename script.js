@@ -43,3 +43,21 @@ function addMonster(m){const list=getMonsterCollection();if(!list.includes(m.nam
 function getMonsterCollection(){try{return JSON.parse(localStorage.getItem('numberCoreMonsters')||'[]')}catch(e){return[]}}
 function status(t){$('statusMessage').textContent=t}function log(t){const p=document.createElement('p');p.textContent=t;$('log').prepend(p);while($('log').children.length>12)$('log').lastChild.remove()}
 reset();
+
+/* Real monster artwork: use the verified web-optimized assets from navi-character-. */
+const REAL_MONSTER_IMAGES={
+  20:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/web/fantasy/monsters/zako/purun-little-magic-slime.webp',
+  30:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/web/fantasy/monsters/zako/komorin-little-night-bat.webp',
+  50:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/web/fantasy/monsters/zako/mofu-wolf-frost-pup.webp',
+  100:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/web/fantasy/monsters/zako/prism-tail-drake.webp'
+};
+function fixMonsterVisual(){
+  const img=$('enemyImage');
+  if(img&&REAL_MONSTER_IMAGES[CORE]){img.src=REAL_MONSTER_IMAGES[CORE];img.style.display='block'}
+  const emoji=$('enemyEmoji');if(emoji)emoji.textContent='';
+  const face=$('enemyFace');if(face)face.textContent='';
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fixMonsterVisual);
+else fixMonsterVisual();
+const enemyImageObserver=new MutationObserver(fixMonsterVisual);
+if($('enemyImage'))enemyImageObserver.observe($('enemyImage'),{attributes:true,attributeFilter:['src']});
