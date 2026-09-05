@@ -38,15 +38,10 @@
   @media(max-width:520px){.start-screen{padding:12px}.start-wrap{min-height:calc(100vh - 24px)}.start-main{border-radius:22px;padding:30px 20px}.start-title{font-size:40px}.start-sub{grid-template-columns:1fr}.book-grid{grid-template-columns:repeat(3,1fr)}.book-item{min-height:105px}.book-item img{width:62px;height:62px}}
   `;
   document.head.appendChild(style);
-
   function makeBook(){
     const modal=document.createElement('div');modal.className='book-modal';modal.innerHTML='<div class="book-panel"><div class="book-head"><div><h2>📖 モンスター図鑑</h2><small id="startBookCount"></small></div><button class="book-close">とじる</button></div><div id="startBookGrid" class="book-grid"></div></div>';
-    document.body.appendChild(modal);
-    modal.querySelector('.book-close').onclick=()=>modal.classList.remove('open');
-    modal.onclick=e=>{if(e.target===modal)modal.classList.remove('open')};
-    return modal;
+    document.body.appendChild(modal);modal.querySelector('.book-close').onclick=()=>modal.classList.remove('open');modal.onclick=e=>{if(e.target===modal)modal.classList.remove('open')};return modal;
   }
-
   function refreshBook(modal){
     const all=getAll(),found=new Set(getFound()),grid=modal.querySelector('#startBookGrid');
     if(!all.length){grid.innerHTML='<p>図鑑データを読み込み中…</p>';return}
@@ -54,7 +49,6 @@
     modal.querySelector('#startBookCount').textContent=`${n}/${normal.length} 発見 ＋ ⭐レア ${r}/${rare.length}`;
     grid.innerHTML=all.map(x=>{const ok=found.has(x.name);return `<div class="book-item ${ok?'':'locked'} ${x.rare?'rare':''}"><img src="${x.image}" alt=""><b>${ok?x.name:'？？？？'}</b><small>CORE ${x.core}${x.rare?'　⭐レア':''}</small></div>`}).join('');
   }
-
   function boot(){
     document.body.classList.add('start-open');
     const screen=document.createElement('div');screen.className='start-screen';screen.innerHTML=`<div class="start-wrap"><section class="start-main"><div class="start-kicker">NUMBER CORE ADVENTURE</div><h1 class="start-title">数覚バトル<b>ナンバーコア！</b></h1><p class="start-copy">数字を組み合わせて、COREをねらえ！<br>JUSTを決めて、モンスターを仲間にしよう。</p><div class="start-actions"><button class="start-btn primary" id="startBattle">⚔️ ぼうけんをはじめる</button><div class="start-sub"><button class="start-btn" id="openBook">📖 モンスター図鑑</button><button class="start-btn" id="startHelp">💡 あそびかた</button></div></div></section><aside class="start-side"><div class="start-scene"><img id="startCharacter" class="start-character" alt="ナビキャラ"></div><div class="start-tip">ナビキャラといっしょに、数字の力を見つけよう！</div></aside></div>`;
@@ -65,7 +59,7 @@
     document.getElementById('startHelp').onclick=()=>alert('① 手札から数字を2〜3枚選ぶ\n② ＋・−・×・÷で式をつくる\n③ COREに近づけよう！\n④ COREぴったりのJUSTでコンボをねらおう！');
     document.getElementById('startBattle').onclick=()=>{
       screen.classList.add('hidden');document.body.classList.remove('start-open');
-      const restart=document.getElementById('restartBtn');if(restart)restart.click();
+      if(typeof window.startNumberCore==='function')window.startNumberCore();
     };
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
