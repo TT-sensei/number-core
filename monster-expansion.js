@@ -3,7 +3,6 @@
   const ZAKO = BASE + 'web/fantasy/monsters/zako/';
   const BOSS = BASE + 'web/fantasy/monsters/boss/';
 
-  // COREごとに複数の敵が登場。姿だけでなく「考え方」も変える。
   const EXPANDED_MONSTERS = [
     {name:'ぷるんスライム',core:20,personality:'かんたん',abilityName:'ぷるぷるガード',ability:'guard',ops:['+','-'],image:ZAKO+'forest-puru.webp'},
     {name:'どんぐりリーフ',core:20,personality:'おだやか',abilityName:'リーフヒール',ability:'heal',ops:['+','-'],image:ZAKO+'acorn-leafy.webp'},
@@ -19,6 +18,8 @@
     {name:'クラウドラビット',core:50,personality:'回避型',abilityName:'雨雲ステップ',ability:'evasion',ops:['+','-','*'],image:ZAKO+'cloud-rain-rabbit.webp'},
     {name:'コバルトカマキリ',core:50,personality:'一撃型',abilityName:'ブレードラッシュ',ability:'rage',ops:['+','-','*','/'],image:ZAKO+'cobalt-blade-mantis.webp'},
     {name:'きらめきトカゲ',core:50,personality:'バランス型',abilityName:'オーロラシェル',ability:'guard',ops:['+','-','*','/'],image:ZAKO+'aurora-shell-lizard.webp'},
+    {name:'ミズタマカッパ',core:50,personality:'いたずら',abilityName:'みずしぶき',ability:'bait',ops:['+','-','*','/'],image:ZAKO+'mizutama-kappa.webp'},
+    {name:'ハニードロップベア',core:50,personality:'おおらか',abilityName:'ハニーリカバー',ability:'heal',ops:['+','-','*'],image:ZAKO+'honeydrop-bear.webp'},
     {name:'アイアンリーフパンサー',core:100,personality:'強敵',abilityName:'アイアンガード',ability:'guard',ops:['+','-','*','/'],image:ZAKO+'ironleaf-panther.webp'},
     {name:'エンバーウィング',core:100,personality:'攻撃型',abilityName:'フレイムラッシュ',ability:'rage',ops:['+','-','*','/'],image:ZAKO+'emberwing-raven.webp'},
     {name:'ランタンアイモス',core:100,personality:'JUSTねらい',abilityName:'ランタンハント',ability:'just',ops:['+','-','*','/'],image:ZAKO+'lantern-eye-moth.webp'},
@@ -27,13 +28,10 @@
     {name:'ペーパークレイン',core:100,personality:'工夫型',abilityName:'おりがみ返し',ability:'mirror',ops:['+','-','*','/'],image:ZAKO+'paper-crane-spirit.webp'},
     {name:'クローバーマンドラゴラ',core:100,personality:'回復型',abilityName:'四つ葉の願い',ability:'heal',ops:['+','-','*'],image:ZAKO+'clover-mandragora.webp'},
     {name:'ダスクフェザーオウル',core:100,personality:'観察型',abilityName:'ナイトアイ',ability:'just',ops:['+','-','*','/'],image:ZAKO+'dusk-feather-owl.webp'},
-    {name:'ミズタマカッパ',core:50,personality:'いたずら',abilityName:'みずしぶき',ability:'bait',ops:['+','-','*','/'],image:ZAKO+'mizutama-kappa.webp'},
-    {name:'ホローハット',core:30,personality:'ゆっくり型',abilityName:'あやしい帽子',ability:'switch',ops:['+','-','*'],image:ZAKO+'hollow-hat-scarecrow.webp'},
-    {name:'ハニードロップベア',core:50,personality:'おおらか',abilityName:'ハニーリカバー',ability:'heal',ops:['+','-','*'],image:ZAKO+'honeydrop-bear.webp'},
-    {name:'エンバーランタン',core:100,personality:'時間型',abilityName:'ほのお時計',ability:'frost',ops:['+','-','*','/'],image:ZAKO+'ember-lantern-salamander.webp'}
+    {name:'エンバーランタン',core:100,personality:'時間型',abilityName:'ほのお時計',ability:'frost',ops:['+','-','*','/'],image:ZAKO+'ember-lantern-salamander.webp'},
+    {name:'ホローハット',core:30,personality:'ゆっくり型',abilityName:'あやしい帽子',ability:'switch',ops:['+','-','*'],image:ZAKO+'hollow-hat-scarecrow.webp'}
   ];
 
-  // ときどき登場するレア敵。通常敵とは別枠なので、突然出会う楽しさを残す。
   const RARE_MONSTERS = [
     {name:'アクアスライムキング',core:100,personality:'ボス級',abilityName:'大海の守り',ability:'guard',ops:['+','-','*','/'],image:BOSS+'aqua-slime-king.webp',rare:true},
     {name:'クリムゾンインフェルノドラゴン',core:100,personality:'ボス級',abilityName:'インフェルノ',ability:'rage',ops:['+','-','*','/'],image:BOSS+'crimson-inferno-dragon.webp',rare:true},
@@ -48,7 +46,6 @@
   window.monsterForCore = function(core) {
     const candidates = EXPANDED_MONSTERS.filter(m => m.core === core);
     if (!candidates.length) return originalMonsterForCore ? originalMonsterForCore(core) : EXPANDED_MONSTERS[0];
-    // レアは約8%。100だけ少し出会いやすくして特別感を出す。
     const rarePool = RARE_MONSTERS.filter(m => m.core === core);
     if (rarePool.length && Math.random() < (core === 100 ? 0.06 : 0.035)) return {...pick(rarePool)};
     return {...pick(candidates)};
@@ -56,13 +53,11 @@
 
   window.reset = function() {
     originalReset.apply(this, arguments);
-    if (window.state && state.monster) {
-      // 古いreset内で選ばれた敵を、拡張ロスターから引き直す。
+    if (typeof state !== 'undefined' && state?.monster) {
       state.monster = window.monsterForCore(CORE);
       if (typeof render === 'function') render();
     }
   };
 
-  // コレクション画面などから数えられるよう公開（既存ロジックは壊さない）。
-  window.NUMBER_CORE_MONSTERS = {all: [...EXPANDED_MONSTERS, ...RARE_MONSTERS], expanded: EXPANDED_MONSTERS, rare: RARE_MONSTERS};
+  window.NUMBER_CORE_MONSTERS = {all:[...EXPANDED_MONSTERS,...RARE_MONSTERS],expanded:EXPANDED_MONSTERS,rare:RARE_MONSTERS};
 })();
