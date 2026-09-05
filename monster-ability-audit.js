@@ -1,5 +1,5 @@
 (() => {
-  const originalApply = window.applyPlayerCommand;
+  const originalApply = applyPlayerCommand;
   if (typeof originalApply !== 'function') return;
 
   const abilityText = {
@@ -12,17 +12,6 @@
   window.applyPlayerCommand = function(cmd, v){
     if (!active()) return originalApply(cmd, v);
     const m = state.monster;
-
-    if (state.enemyGuard && attack(cmd)) {
-      state.enemyGuard = Math.max(0, state.enemyGuard - 1);
-      log(`あなた：${v} → ${cmd.name}（ガード！ ダメージ0）`);
-      status(`${m.abilityName}！ 次の攻撃を防がれた。`);
-      if (typeof animatePlayer === 'function') animatePlayer(v === CORE ? 'special' : 'attack');
-      if (typeof animateEnemy === 'function') animateEnemy('damage');
-      render();
-      return;
-    }
-
     const beforeHP = state.enemyHP;
     const beforePlayerHP = state.playerHP;
     originalApply(cmd, v);
@@ -37,7 +26,7 @@
         }
         break;
       case 'heal':
-        if (cmd?.name === '回復') {
+        if (cmd?.name === '回復' && state.playerHP > beforePlayerHP) {
           state.enemyHP = Math.min(MAX_HP, state.enemyHP + 1);
           status(`${m.abilityName}！ モンスターもHPが1回復。`);
           render();
