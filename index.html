@@ -13,12 +13,11 @@
     <div class="brand"><div class="eyebrow">NUMBER CORE</div><h1>数覚バトル<br class="mobile-only"> ナンバーコア!</h1></div>
     <div class="core-hud">
       <div class="core-caption">ねらうコアナンバー</div>
-      <div id="coreNumber" class="core-number">30</div>
+      <div class="core-select-row"><select id="coreSelect" aria-label="コアナンバーを選ぶ"><option value="20">20</option><option value="30" selected>30</option><option value="50">50</option><option value="100">100</option></select><div id="coreNumber" class="core-number">30</div></div>
       <div id="rangeGuide" class="range-guide"></div>
     </div>
     <div class="turn-hud">
-      <div class="turn-label">あなたのターン</div>
-      <div class="timer">⏱ <b id="timer">20</b><small>秒</small></div>
+      <div><div class="turn-label">あなたのターン</div><div class="timer">⏱ <b id="timer">20</b><small>秒</small></div></div>
       <button id="restartBtn" class="ghost">最初から</button>
     </div>
   </header>
@@ -36,6 +35,11 @@
       <div class="section-title">ねらえるコマンド</div>
       <div id="commandCards" class="command-cards"></div>
     </section>
+    <section class="collection-card">
+      <div class="section-title">発見図鑑</div>
+      <div><b id="discoveryCount">0</b> / 100 通り</div>
+      <div class="collection-note">見つけた「コアの作り方」が記録されます</div>
+    </section>
     <section class="battle-log">
       <div class="section-title">バトルログ</div>
       <div id="log" class="log"></div>
@@ -46,8 +50,9 @@
     <section class="battle">
       <div class="battle-banner">CORE BATTLE</div>
       <div class="fighter enemy">
-        <div class="fighter-name"><span>👾</span> CPU</div>
-        <div class="monster-face" id="enemyEmoji">👾</div>
+        <div class="fighter-name"><span id="enemyEmoji">👾</span> <b id="enemyName">CPU</b></div>
+        <div class="monster-face" id="enemyFace">👾</div>
+        <div id="enemyAbility" class="ability-badge">ふつう</div>
         <div class="hp-wrap"><div id="enemyHpBar" class="hp-bar"></div></div>
         <div id="enemyHpText" class="hp-text">HP 10 / 10</div>
       </div>
@@ -55,6 +60,7 @@
       <div class="fighter player">
         <div class="fighter-name"><span>🧙</span> YOU</div>
         <div class="player-face">🧙</div>
+        <div class="ability-badge">JUSTでCORE POWER</div>
         <div class="hp-wrap"><div id="playerHpBarScene" class="hp-bar"></div></div>
         <div class="hp-text">数字を組み合わせて攻撃！</div>
       </div>
@@ -83,8 +89,9 @@
   <aside class="side-panel enemy-panel">
     <div class="panel-title">敵の情報</div>
     <div class="summary-card enemy-summary">
-      <div class="name-row"><span>名前</span><b>モンスター</b></div>
-      <div class="name-row"><span>状態</span><b>戦闘中</b></div>
+      <div class="name-row"><span>名前</span><b id="enemyNameSide">モンスター</b></div>
+      <div class="name-row"><span>コア</span><b id="enemyCoreSide">30</b></div>
+      <div class="name-row"><span>性格</span><b id="cpuPersonality">ふつう</b></div>
       <div class="hp-label"><span>HP</span><b id="cpuHp">10</b></div>
       <div class="hp-wrap"><div id="enemyHpBarSide" class="hp-bar"></div></div>
       <div id="enemyHpTextSide" class="hp-text">HP 10 / 10</div>
@@ -95,6 +102,11 @@
       <div id="enemyFormula" class="enemy-formula">---</div>
       <div id="enemyCommand" class="enemy-command">---</div>
     </section>
+    <section class="methods-card">
+      <div class="section-title">みんなの30</div>
+      <div id="methodExamples">12＋18＝30<br>5×6＝30<br>40−10＝30</div>
+      <div class="collection-note">JUSTすると今回の式も図鑑に登録！</div>
+    </section>
     <div class="side-hint">コアに近いほど強いコマンド！<br>JUSTなら次の攻撃がパワーアップ。</div>
   </aside>
 
@@ -103,6 +115,7 @@
       <div id="resultEmoji" class="result-emoji">🎉</div>
       <h2 id="resultTitle">勝利！</h2>
       <p id="resultText"></p>
+      <div id="resultExtra" class="result-extra"></div>
       <button id="nextBtn" class="execute">もう一度遊ぶ</button>
     </div>
   </div>
@@ -113,9 +126,10 @@
   document.getElementById('changeBtn').onclick=changeCard;
   document.getElementById('restartBtn').onclick=reset;
   document.getElementById('nextBtn').onclick=reset;
+  document.getElementById('coreSelect').onchange=()=>{state.nextCore=Number(document.getElementById('coreSelect').value);reset()};
   document.querySelectorAll('#operators button').forEach(b=>b.onclick=()=>chooseOperator(b.dataset.op));
   const originalRender=render;
-  render=function(){originalRender();const p=state.playerHP,e=state.enemyHP;document.getElementById('playerHpBarScene').style.width=`${p/MAX_HP*100}%`;document.getElementById('enemyHpBarSide').style.width=`${e/MAX_HP*100}%`;document.getElementById('cpuHp').textContent=e;document.getElementById('enemyHpTextSide').textContent=`HP ${e} / ${MAX_HP}`;};
+  render=function(){originalRender();const p=state.playerHP,e=state.enemyHP;document.getElementById('playerHpBarScene').style.width=`${p/MAX_HP*100}%`;document.getElementById('enemyHpBarSide').style.width=`${e/MAX_HP*100}%`;document.getElementById('cpuHp').textContent=e;document.getElementById('enemyHpTextSide').textContent=`HP ${e} / ${MAX_HP}`;document.getElementById('enemyCoreSide').textContent=CORE;document.getElementById('coreSelect').value=String(CORE);document.getElementById('enemyNameSide').textContent=state.monster.name;document.getElementById('enemyName').textContent=state.monster.name;document.getElementById('enemyFace').textContent=state.monster.emoji;document.getElementById('enemyEmoji').textContent=state.monster.emoji;document.getElementById('enemyAbility').textContent=state.monster.abilityName;document.getElementById('cpuPersonality').textContent=state.monster.personality;document.getElementById('discoveryCount').textContent=getDiscovery().length;};
   render();
 </script>
 </body>
