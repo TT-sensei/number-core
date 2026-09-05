@@ -41,8 +41,9 @@
 
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const originalMonsterForCore = window.monsterForCore;
-  const originalReset = window.reset;
 
+  // Replace only the monster selector. The original reset() remains the single source of truth.
+  // This prevents double battle-counting and keeps CORE changes/restarts on the same game loop.
   window.monsterForCore = function(core) {
     const candidates = EXPANDED_MONSTERS.filter(m => m.core === core);
     if (!candidates.length) return originalMonsterForCore ? originalMonsterForCore(core) : EXPANDED_MONSTERS[0];
@@ -51,24 +52,16 @@
     return {...pick(candidates)};
   };
 
-  window.reset = function() {
-    originalReset.apply(this, arguments);
-    if (typeof state !== 'undefined' && state?.monster) {
-      state.monster = window.monsterForCore(CORE);
-      if (typeof render === 'function') render();
-    }
-  };
-
-  const current = typeof state !== 'undefined' ? state : null;
-  if (current?.monster) {
-    current.monster = window.monsterForCore(CORE);
+  // The first reset has already happened before this file loads.
+  // Swap the currently displayed monster without starting another battle.
+  if (typeof state !== 'undefined' && state?.monster) {
+    state.monster = window.monsterForCore(CORE);
     if (typeof render === 'function') render();
   }
 
-  const restart = document.getElementById('restartBtn');
-  const next = document.getElementById('nextBtn');
-  if (restart) restart.onclick = () => window.reset();
-  if (next) next.onclick = () => window.reset();
-
-  window.NUMBER_CORE_MONSTERS = {all:[...EXPANDED_MONSTERS,...RARE_MONSTERS],expanded:EXPANDED_MONSTERS,rare:RARE_MONSTERS};
+  window.NUMBER_CORE_MONSTERS = {
+    all:[...EXPANDED_MONSTERS,...RARE_MONSTERS],
+    expanded:EXPANDED_MONSTERS,
+    rare:RARE_MONSTERS
+  };
 })();
