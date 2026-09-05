@@ -6,6 +6,15 @@
 <meta name="theme-color" content="#eaf6ee">
 <title>数覚バトル ナンバーコア!</title>
 <link rel="stylesheet" href="style.css">
+<style>
+.fantasy-character,.fantasy-monster{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 8px rgba(0,0,0,.14));}
+.player-visual,.monster-visual{height:210px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.player-visual{height:230px;}
+.fantasy-character{max-width:230px;}
+.fantasy-monster{max-width:220px;}
+.monster-face,.player-face{display:none;}
+@media(max-width:900px){.player-visual,.monster-visual{height:180px}.fantasy-character,.fantasy-monster{max-width:180px}}
+</style>
 </head>
 <body>
 <main id="app">
