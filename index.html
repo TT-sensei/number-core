@@ -26,6 +26,7 @@
     <div class="panel-title">プレイヤー</div>
     <div class="summary-card">
       <div class="name-row"><span>名前</span><b>ななしさん</b></div>
+      <div class="name-row"><span>仲間</span><b id="playerFantasyName">そら・剣士</b></div>
       <div class="name-row"><span>状態</span><b>元気</b></div>
       <div class="hp-label"><span>HP</span><b id="playerHp">10</b></div>
       <div class="hp-wrap"><div id="playerHpBar" class="hp-bar"></div></div>
@@ -51,15 +52,17 @@
       <div class="battle-banner">CORE BATTLE</div>
       <div class="fighter enemy">
         <div class="fighter-name"><span id="enemyEmoji">👾</span> <b id="enemyName">CPU</b></div>
-        <div class="monster-face" id="enemyFace">👾</div>
+        <div class="monster-visual"><img id="enemyImage" class="fantasy-monster" alt="モンスター"></div>
+        <div class="monster-face" id="enemyFace" aria-hidden="true">👾</div>
         <div id="enemyAbility" class="ability-badge">ふつう</div>
         <div class="hp-wrap"><div id="enemyHpBar" class="hp-bar"></div></div>
         <div id="enemyHpText" class="hp-text">HP 10 / 10</div>
       </div>
       <div class="versus">VS</div>
       <div class="fighter player">
-        <div class="fighter-name"><span>🧙</span> YOU</div>
-        <div class="player-face">🧙</div>
+        <div class="fighter-name"><span>⚔️</span> <b id="playerFantasyNameScene">そら・剣士</b></div>
+        <div class="player-visual"><img id="playerFantasyImage" class="fantasy-character" alt="ファンタジー版ナビキャラ"></div>
+        <div class="player-face" aria-hidden="true">🧙</div>
         <div class="ability-badge">JUSTでCORE POWER</div>
         <div class="hp-wrap"><div id="playerHpBarScene" class="hp-bar"></div></div>
         <div class="hp-text">数字を組み合わせて攻撃！</div>
@@ -103,7 +106,7 @@
       <div id="enemyCommand" class="enemy-command">---</div>
     </section>
     <section class="methods-card">
-      <div class="section-title">みんなの30</div>
+      <div class="section-title" id="methodTitle">みんなの30</div>
       <div id="methodExamples">12＋18＝30<br>5×6＝30<br>40−10＝30</div>
       <div class="collection-note">JUSTすると今回の式も図鑑に登録！</div>
     </section>
@@ -127,9 +130,47 @@
   document.getElementById('restartBtn').onclick=reset;
   document.getElementById('nextBtn').onclick=reset;
   document.getElementById('coreSelect').onchange=()=>{state.nextCore=Number(document.getElementById('coreSelect').value);reset()};
-  document.querySelectorAll('#operators button').forEach(b=>b.onclick=()=>chooseOperator(b.dataset.op));
   const originalRender=render;
-  render=function(){originalRender();const p=state.playerHP,e=state.enemyHP;document.getElementById('playerHpBarScene').style.width=`${p/MAX_HP*100}%`;document.getElementById('enemyHpBarSide').style.width=`${e/MAX_HP*100}%`;document.getElementById('cpuHp').textContent=e;document.getElementById('enemyHpTextSide').textContent=`HP ${e} / ${MAX_HP}`;document.getElementById('enemyCoreSide').textContent=CORE;document.getElementById('coreSelect').value=String(CORE);document.getElementById('enemyNameSide').textContent=state.monster.name;document.getElementById('enemyName').textContent=state.monster.name;document.getElementById('enemyFace').textContent=state.monster.emoji;document.getElementById('enemyEmoji').textContent=state.monster.emoji;document.getElementById('enemyAbility').textContent=state.monster.abilityName;document.getElementById('cpuPersonality').textContent=state.monster.personality;document.getElementById('discoveryCount').textContent=getDiscovery().length;};
+  const fantasyCharacters=[
+    {name:'かい・魔導士',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/kai-mage.png'},
+    {name:'そら・剣士',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/sora-swordsman.png'},
+    {name:'りく・忍者',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/riku-ninja.png'},
+    {name:'つき・アーチャー',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/tsuki-archer.png'},
+    {name:'なみ・守護騎士',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/nami-guardian-knight.png'},
+    {name:'さく・僧侶',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/saku-cleric-healer.png'}
+  ];
+  const fantasyMonsters={
+    'ぷるんスライム':'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/purun-little-magic-slime.png',
+    'ゴブリン':'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/komorin-little-night-bat.png',
+    'ドラゴン':'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/thunder-spark-fox.png',
+    '星喰いの幻獣':'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/prism-tail-drake.png'
+  };
+  render=function(){
+    originalRender();
+    const p=state.playerHP,e=state.enemyHP;
+    if(!state.playerFantasy)state.playerFantasy=fantasyCharacters[Math.floor(Math.random()*fantasyCharacters.length)];
+    const pc=state.playerFantasy;
+    const pi=document.getElementById('playerFantasyImage');pi.src=pc.src;pi.alt=pc.name;
+    document.getElementById('playerFantasyName').textContent=pc.name;
+    document.getElementById('playerFantasyNameScene').textContent=pc.name;
+    const mi=document.getElementById('enemyImage');
+    mi.src=fantasyMonsters[state.monster.name]||'';
+    mi.alt=state.monster.name;
+    mi.style.display=mi.src?'block':'none';
+    document.getElementById('playerHpBarScene').style.width=`${p/MAX_HP*100}%`;
+    document.getElementById('enemyHpBarSide').style.width=`${e/MAX_HP*100}%`;
+    document.getElementById('cpuHp').textContent=e;
+    document.getElementById('enemyHpTextSide').textContent=`HP ${e} / ${MAX_HP}`;
+    document.getElementById('enemyCoreSide').textContent=CORE;
+    document.getElementById('coreSelect').value=String(CORE);
+    document.getElementById('enemyNameSide').textContent=state.monster.name;
+    document.getElementById('enemyName').textContent=state.monster.name;
+    document.getElementById('enemyFace').textContent=state.monster.emoji;
+    document.getElementById('enemyEmoji').textContent=state.monster.emoji;
+    document.getElementById('enemyAbility').textContent=state.monster.abilityName;
+    document.getElementById('discoveryCount').textContent=getDiscovery().length;
+    document.getElementById('methodTitle').textContent=`みんなの${CORE}`;
+  };
   render();
 </script>
 </body>
