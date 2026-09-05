@@ -149,12 +149,13 @@
     {name:'さく・僧侶',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/saku-cleric-healer.png'}
   ];
   const fantasyMonsters={
-    'ぷるんスライム':'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/purun-little-magic-slime.png',
-    'ゴブリン':'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/komorin-little-night-bat.png',
-    'ドラゴン':'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/thunder-spark-fox.png',
-    '星喰いの幻獣':'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/prism-tail-drake.png'
+    20:{name:'ぷるんスライム',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/purun-little-magic-slime.png'},
+    30:{name:'こもりんバット',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/komorin-little-night-bat.png'},
+    50:{name:'もふウルフ',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/mofu-wolf-frost-pup.png'},
+    100:{name:'プリズムテールドレイク',src:'https://raw.githubusercontent.com/TT-sensei/navi-character-/main/assets/fantasy/monsters/prism-tail-drake.png'}
   };
   render=function(){
+    if(fantasyMonsters[CORE])state.monster={...state.monster,...fantasyMonsters[CORE]};
     originalRender();
     const p=state.playerHP,e=state.enemyHP;
     if(!state.playerFantasy)state.playerFantasy=fantasyCharacters[Math.floor(Math.random()*fantasyCharacters.length)];
@@ -162,10 +163,7 @@
     const pi=document.getElementById('playerFantasyImage');pi.src=pc.src;pi.alt=pc.name;
     document.getElementById('playerFantasyName').textContent=pc.name;
     document.getElementById('playerFantasyNameScene').textContent=pc.name;
-    const mi=document.getElementById('enemyImage');
-    mi.src=fantasyMonsters[state.monster.name]||'';
-    mi.alt=state.monster.name;
-    mi.style.display=mi.src?'block':'none';
+    const mi=document.getElementById('enemyImage');mi.src=state.monster.src||'';mi.alt=state.monster.name;mi.style.display=mi.src?'block':'none';
     document.getElementById('playerHpBarScene').style.width=`${p/MAX_HP*100}%`;
     document.getElementById('enemyHpBarSide').style.width=`${e/MAX_HP*100}%`;
     document.getElementById('cpuHp').textContent=e;
