@@ -24,6 +24,7 @@
 - ファンタジー背景
 - ナビキャラのATTACK / SPECIAL演出
 - モンスターGET
+- モンスター図鑑
 - 発見図鑑
 - ブラウザ保存
 
@@ -112,6 +113,14 @@ CPUのターンには、
 
 相手の計算を見ること自体が、数字の組み合わせ方を見る機会になります。
 
+## モンスター図鑑
+
+出会ったモンスターはブラウザに保存され、図鑑に登録されます。
+
+図鑑はゲーム画面を圧迫しないよう、折りたたみ式にしています。タブレットでは広めに一覧表示し、スマートフォンでは列数を減らして見やすくします。
+
+未発見のモンスターは「？？？？」として表示され、レアモンスターは特別表示されます。
+
 ## 発見図鑑
 
 バトルで作った式は自動的に図鑑へ保存されます。
@@ -187,7 +196,7 @@ CPUのターンには、
 主な保存データは次の通りです。
 
 - `numberCoreDiscovery`：発見した計算式
-- `numberCoreMonsters`：GETしたモンスター
+- `numberCoreMonsters`：出会ったモンスター
 - `numberCoreStats`：バトル数・勝敗・JUST回数
 
 アカウント登録やサーバーを必要としない、ブラウザ完結型です。
@@ -209,13 +218,15 @@ number-core/
 ├── script.js
 ├── gameplay-fix.js
 ├── monster-expansion.js
+├── monster-ability-audit.js
+├── monster-collection-ui.js
 ├── README.md
 ├── game.html      # 旧プロトタイプ
 ├── game.css       # 旧プロトタイプ
 └── game.js        # 旧プロトタイプ
 ```
 
-現在の本体は `index.html` / `style.css` / `script.js` と、追加の `gameplay-fix.js` / `monster-expansion.js` です。
+現在の本体は `index.html` / `style.css` / `script.js` と、追加の `gameplay-fix.js` / `monster-expansion.js` / `monster-ability-audit.js` / `monster-collection-ui.js` です。
 
 旧プロトタイプは動作確認用として残しています。
 
