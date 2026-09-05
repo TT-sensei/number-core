@@ -13,7 +13,7 @@ const CHARS=[
 let CORE=30,state=null,timerId=null,strategyBound=false;
 const $=id=>document.getElementById(id);const shuffle=a=>[...a].sort(()=>Math.random()-.5);
 const read=(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k)||'null')??d}catch{return d}};const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-function monsterForCore(c){return MONSTERS.find(m=>m.core===c)||MONSTERS[1]}
+function monsterForCore(c){const expanded=typeof window!=='undefined'&&window.monsterForCore;if(expanded&&expanded!==monsterForCore)return expanded(c);return MONSTERS.find(m=>m.core===c)||MONSTERS[1]}
 function getRanges(){const c=CORE;return[{min:c-10,max:c-7,name:'防御',icon:'防御'},{min:c-6,max:c-4,name:'攻撃',icon:'攻撃'},{min:c-3,max:c-1,name:'強攻撃',icon:'強攻撃'},{min:c,max:c,name:'JUST',icon:'JUST',just:true},{min:c+1,max:c+3,name:'強攻撃',icon:'強攻撃'},{min:c+4,max:c+6,name:'攻撃',icon:'攻撃'},{min:c+7,max:c+10,name:'回復',icon:'回復'}]}
 function findCommand(v){return getRanges().find(r=>v>=r.min&&v<=r.max)||null}
 function makeDeck(){const a=[];for(let n=1;n<=20;n++)for(let i=0;i<2;i++)a.push(n);return shuffle(a)}
