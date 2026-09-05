@@ -38,13 +38,15 @@
         }
         break;
       case 'heal':
-        if (cmd.name === '回復') {
+        // 回復コマンドでも、HPが満タンなら「回復した」とは扱わない。
+        if (cmd.name === '回復' && state.playerHP > beforePlayer) {
           state.enemyHP = Math.min(MAX_HP, state.enemyHP + 1);
           status(`${m.abilityName}！ モンスターもHP+1。`);
         }
         break;
       case 'bait':
-        if (cmd.name === '回復') {
+        // 実際に回復できたときだけ、すきをつかれる。
+        if (cmd.name === '回復' && state.playerHP > beforePlayer) {
           state.playerHP = Math.max(0, state.playerHP - 1);
           status(`${m.abilityName}！ 回復をねらったすきをつかれた。`);
         }
