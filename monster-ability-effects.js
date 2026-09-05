@@ -10,7 +10,8 @@
     'ミラーバリア': { key:'mirror', icon:'🪞', label:'MIRROR!' },
     'フロスト': { key:'frost', icon:'❄️', label:'FROST!' },
     'いかりの力': { key:'rage', icon:'🔥', label:'RAGE!' },
-    'よける': { key:'evasion', icon:'💨', label:'EVADE!' }
+    'よける': { key:'evasion', icon:'💨', label:'EVADE!' },
+    'コアイーター': { key:'eater', icon:'💠', label:'CORE EATER!' }
   };
   let lastAbility='', lastStatus='', lastEnemy='';
   const battle=()=>document.querySelector('.battle');
@@ -24,12 +25,13 @@
     setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),180)},650);
   }
   const style=document.createElement('style'); style.textContent=`
-    .enemy-ability{transition:transform .18s,box-shadow .18s,background .18s}.ability-moment{position:absolute;left:50%;top:34%;z-index:14;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:3px;opacity:0;transform:translate(-50%,12px) scale(.72);font-weight:1000;text-shadow:0 3px 0 #fff,0 5px 12px #29473644}.ability-moment b{font-size:clamp(20px,3.4vw,34px)}.ability-moment small{font-size:10px}.ability-moment.show{opacity:1;transform:translate(-50%,-18px) scale(1);transition:opacity .1s,transform .25s cubic-bezier(.2,1.5,.4,1)}
+    .battle{position:relative;overflow:hidden}.enemy-ability{transition:transform .18s,box-shadow .18s,background .18s}.ability-moment{position:absolute;left:50%;top:34%;z-index:14;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:3px;opacity:0;transform:translate(-50%,12px) scale(.72);font-weight:1000;text-shadow:0 3px 0 #fff,0 5px 12px #29473644}.ability-moment b{font-size:clamp(20px,3.4vw,34px)}.ability-moment small{font-size:10px}.ability-moment.show{opacity:1;transform:translate(-50%,-18px) scale(1);transition:opacity .1s,transform .25s cubic-bezier(.2,1.5,.4,1)}
     .battle[class*="ability-"] .enemy-ability{transform:scale(1.12);box-shadow:0 0 18px #8bc89d88}
     .battle.ability-guard .enemy-ability,.battle.ability-mirror .enemy-ability{background:#e6f0ff}.battle.ability-breath .enemy-ability,.battle.ability-frost .enemy-ability{background:#e7f5ff}.battle.ability-rage .enemy-ability{background:#fff0df}.battle.ability-heal .enemy-ability{background:#edf8e9}.battle.ability-switch .enemy-ability{background:#f1edff}
+    .result-emoji{font-weight:1000;letter-spacing:.08em}.skill-label{position:fixed;left:50%;top:45%;z-index:50;pointer-events:none;font-size:clamp(24px,5vw,52px);font-weight:1000;opacity:0;transform:translate(-50%,10px) scale(.7);text-shadow:0 3px 0 #fff}.skill-label.show{animation:skill-pop .65s ease-out forwards}@keyframes skill-pop{15%{opacity:1;transform:translate(-50%,-12px) scale(1.08)}100%{opacity:0;transform:translate(-50%,-55px) scale(1)}}
   `; document.head.appendChild(style);
   function watch(){
-    const a=info(), s=document.getElementById('status')?.textContent?.trim()||'', enemy=document.getElementById('enemyName')?.textContent?.trim()||'';
+    const a=info(), s=document.getElementById('statusMessage')?.textContent?.trim()||'', enemy=document.getElementById('enemyName')?.textContent?.trim()||'';
     if(enemy!==lastEnemy){lastEnemy=enemy;lastAbility='';lastStatus='';}
     if(a&&a.key!==lastAbility){lastAbility=a.key; const el=document.getElementById('enemyAbility');if(el)el.dataset.ability=a.key;}
     if(a&&s&&s!==lastStatus){
