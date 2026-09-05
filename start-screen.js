@@ -59,8 +59,8 @@
     document.getElementById('startHelp').onclick=()=>alert('① 手札から数字を2〜3枚選ぶ\n② ＋・−・×・÷で式をつくる\n③ COREに近づけよう！\n④ COREぴったりのJUSTでコンボをねらおう！');
     document.getElementById('startBattle').onclick=()=>{
       screen.classList.add('hidden');document.body.classList.remove('start-open');
-      const restart=document.getElementById('restartBtn');
-      if(restart)restart.click();
+      if(typeof window.startNumberCore==='function')window.startNumberCore();
+      else {const restart=document.getElementById('restartBtn');if(restart)restart.click();}
     };
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
